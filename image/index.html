@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wrap Text</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <section id="splash">
+      <div class="image">
+      </div>
+      <div
+        id="block"
+        data-text="Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019"
+      ></div>
+      <img
+        style="width: 300px;"
+        id="image"
+        src="assets/0222-250px.jpg"
+        alt="Breads arranged on table"
+      />
+    </section>
+    <script src="wrap.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      const wrapper = document.getElementById("splash");
+      const block = document.getElementById("block");
+      const imageObj = document.getElementById("image");
+      block.innerHTML =
+        block.innerHTML +
+        letterWrapper(block.getAttribute("data-text"), "span", "letter");
+      wrapAroundImage(block, imageObj, 75);
+    </script>
+  </body>
+</html>

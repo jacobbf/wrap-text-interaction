@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wrap Text</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <section id="splash">
+      <div class="image">
+      </div>
+      <div
+        id="block"
+        data-text="Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019"
+      ></div>
+      <img
+        style="width: 300px;"
+        id="image"
+        src="assets/0222-250px.jpg"
+        alt="Breads arranged on table"
+      />
+    </section>
+
+    <script type="text/javascript">
+      // https://codeburst.io/throttling-and-debouncing-in-javascript-646d076d0a44
+      function throttled(delay, fn) {
+        let lastCall = 0;
+        return function(...args) {
+          const now = new Date().getTime();
+          if (now - lastCall < delay) {
+            return;
+          }
+          lastCall = now;
+          return fn(...args);
+        };
+      }
+
+      /* takes text, a class name and an element type all as strings wraps each letter in a span with class letter */
+      const letterWrapper = function(string, el, cl) {
+        let wrappedText = "";
+        for (var i = 0; i < string.length; i++) {
+          let char = string.charAt(i);
+          let nextChar = string.charAt(i + 1);
+          if (char != " ") {
+            if (nextChar == " ") {
+              wrappedText =
+                wrappedText +
+                "<" +
+                el +
+                " class='" +
+                cl +
+                "'>" +
+                char +
+                "&nbsp;</" +
+                el +
+                ">";
+            } else {
+              wrappedText =
+                wrappedText +
+                "<" +
+                el +
+                " class='" +
+                cl +
+                "'>" +
+                char +
+                "</" +
+                el +
+                ">";
+            }
+          }
+        }
+        return wrappedText;
+      };
+
+      /* wrapAroundImage
+      textContainer -> the parent container of the text to wrap around the image. Text itself must have each character wrapped in a span. To do this automatically see letterWrapper()
+      margin -> left and right stops for image movement */
+      const wrapAroundImage = function(textContainer, image, lrMargin) {
+        // declaring these guys, we'll define them later
+        let imageRect;
+        let imageWidth;
+        let imageHeight;
+        let imageTop;
+        let imageLeft;
+        let fontWidth;
+        let letterHeight;
+        let lrPadding;
+        let tbPadding;
+        let blockRect;
+        let blockLeft;
+        let image2 = {
+          x : 0,
+          y : 0,
+          w : 0,
+          h : 0
+        };
+
+        const setUp = function() {
+          // get image width and height before we start messing with events
+          blockRect = textContainer.getBoundingClientRect();
+          blockWidth = blockRect.width;
+          blockLeft = blockRect.x;
+          imageRect = image.getBoundingClientRect();
+          imageWidth = imageRect.width;
+          imageHeight = imageRect.height;
+          fontWidth = parseFloat(
+            window
+              .getComputedStyle(textContainer.children[0])
+              .getPropertyValue("width")
+          );
+          letterHeight = parseInt(
+            window
+              .getComputedStyle(textContainer.children[0])
+              .getPropertyValue("height")
+          );
+          lrPadding = fontWidth;
+          tbPadding = letterHeight;
+          image2.w = imageWidth;
+          image2.h = imageHeight;
+        };
+
+        const wrapTextAroundimage = function() {
+          image.classList.add("moved");
+
+          imageLeft = event.clientX - imageWidth / 2;
+          imageTop = event.clientY - imageHeight / 2;
+          image2.x = imageLeft + 50 + Math.floor(Math.random() * 20);
+          image2.y = imageTop + 50 + Math.floor(Math.random() * 20);
+
+          if (imageLeft < blockLeft + lrMargin || image2.x < blockLeft + lrMargin) {
+            console.log('clamp left');
+            imageLeft = blockLeft + lrMargin;
+          }
+          if (imageLeft + imageWidth > blockLeft + blockWidth - lrMargin
+              || image2.x + imageWidth > blockLeft + blockWidth - lrMargin) {
+            console.log('clamp right');
+            imageLeft = blockLeft + blockWidth - imageWidth - lrMargin;
+          }
+
+          image.style.transform =
+            "translate(" + imageLeft + "px ," + imageTop + "px)";
+
+          const letters = textContainer.children;
+          for (var i = 0; i < letters.length; i++) {
+            const dx = letters[i].getBoundingClientRect().x - imageLeft;
+            const dy = letters[i].getBoundingClientRect().y - imageTop;
+
+            const dx2 = letters[i].getBoundingClientRect().x - image2.x;
+            const dy2 = letters[i].getBoundingClientRect().y - image2.y;
+
+            if (
+              dx < lrPadding * 1.25 &&
+              dx > -lrPadding * 1.25 &&
+              dy > -tbPadding &&
+              dy < imageHeight
+            ) {
+              // let width = window
+              //   .getComputedStyle(letters[i])
+              //   .getPropertyValue("width");
+              // let parsedWidth = width.split("p");
+              letters[i].style.paddingLeft =
+                imageWidth +
+                fontWidth / 2 +
+                "px";
+            } else if (
+              dx2 < lrPadding * 1.25 &&
+              dx2 > -lrPadding * 1.25 &&
+              dy2 > -tbPadding &&
+              dy2 < imageHeight
+            ) {
+              letters[i].style.paddingLeft =
+                imageWidth - 10 +
+                fontWidth / 2 +
+                "px";
+            } else {
+              letters[i].style.paddingLeft = 0 + "px";
+            }
+          }
+        };
+
+        window.addEventListener("load", setUp);
+        window.addEventListener("resize", setUp);
+        const throttledWrapTextAroundimage = throttled(50, wrapTextAroundimage);
+        document.addEventListener("mousemove", throttledWrapTextAroundimage);
+        document.addEventListener("touchmove", throttledWrapTextAroundimage);
+      };
+
+      const wrapper = document.getElementById("splash");
+      const block = document.getElementById("block");
+      const imageObj = document.getElementById("image");
+      block.innerHTML =
+        block.innerHTML +
+        letterWrapper(block.getAttribute("data-text"), "span", "letter");
+      wrapAroundImage(block, imageObj, 75);
+    </script>
+  </body>
+</html>
