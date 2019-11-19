@@ -137,10 +137,10 @@
             const dy = letters[i].getBoundingClientRect().y - event.clientY;
             const random = 50 * Math.random()
             const dc = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-            if (dc < 250 && dc < 190 && dx < 0) {
-              letters[i].style.color = 'red';
+            if (dc < 150 && dc > 110 && dx < 0) {
+              // letters[i].style.color = 'red';
               letters[i].style.paddingLeft = `${Math.abs(dx * 2 - letterRandom)}px`;
-            } else if (dc < 250 && dy > 100 && dx < -50 && dx > -100) {
+            } else if (dc < 230 && dy < 100 && dx < -50 && dx > -150) {
               // letters[i].style.color = 'red';
               letters[i].style.paddingLeft = `${Math.abs(dx * 3 + letterRandom)}px`;
             } else {
