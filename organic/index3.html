@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wrap Text</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <section id="splash">
+      <div class="image">
+      </div>
+      <div
+        id="block"
+        data-text="Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019"
+      ></div>
+      <img
+        style="width: 300px;"
+        id="image"
+        src="assets/0222-250px.jpg"
+        alt="Breads arranged on table"
+      />
+    </section>
+
+    <script type="text/javascript">
+      // https://codeburst.io/throttling-and-debouncing-in-javascript-646d076d0a44
+      function throttled(delay, fn) {
+        let lastCall = 0;
+        return function(...args) {
+          const now = new Date().getTime();
+          if (now - lastCall < delay) {
+            return;
+          }
+          lastCall = now;
+          return fn(...args);
+        };
+      }
+
+      /* takes text, a class name and an element type all as strings wraps each letter in a span with class letter */
+      const letterWrapper = function(string, el, cl) {
+        let wrappedText = "";
+        for (var i = 0; i < string.length; i++) {
+          let random = Math.floor(100 * Math.random());
+          let char = string.charAt(i);
+          let nextChar = string.charAt(i + 1);
+          if (char != " ") {
+            if (nextChar == " ") {
+              wrappedText =
+                wrappedText +
+                `<` +
+                el +
+                ` data-padding=${random} class='` +
+                cl +
+                "'>" +
+                char +
+                "&nbsp;</" +
+                el +
+                ">";
+            } else {
+              wrappedText =
+                wrappedText +
+                `<` +
+                el +
+                ` data-padding=${random} class='` +
+                cl +
+                "'>" +
+                char +
+                "</" +
+                el +
+                ">";
+            }
+          }
+        }
+        return wrappedText;
+      };
+
+      /* wrapAroundImage
+      textContainer -> the parent container of the text to wrap around the image. Text itself must have each character wrapped in a span. To do this automatically see letterWrapper()
+      margin -> left and right stops for image movement */
+      const wrapAroundImage = function(textContainer, image, lrMargin) {
+        // declaring these guys, we'll define them later
+        let imageRect;
+        let imageWidth;
+        let imageHeight;
+        let imageTop;
+        let imageLeft;
+        let fontWidth;
+        let letterHeight;
+        let lrPadding;
+        let tbPadding;
+        let blockRect;
+        let blockLeft;
+
+        const setUp = function() {
+          // get image width and height before we start messing with events
+          blockRect = textContainer.getBoundingClientRect();
+          console.log(blockRect);
+          blockWidth = blockRect.width;
+          blockLeft = blockRect.x;
+          imageRect = image.getBoundingClientRect();
+          imageWidth = imageRect.width;
+          imageHeight = imageRect.height;
+          fontWidth = parseFloat(
+            window
+              .getComputedStyle(textContainer.children[0])
+              .getPropertyValue("width")
+          );
+          letterHeight = parseInt(
+            window
+              .getComputedStyle(textContainer.children[0])
+              .getPropertyValue("height")
+          );
+          lrPadding = fontWidth;
+          tbPadding = letterHeight;
+        };
+
+        const wrapTextAroundimage = function() {
+          image.classList.add("moved");
+
+          imageLeft = event.clientX - imageWidth / 2;
+          imageTop = event.clientY - imageHeight / 2;
+
+          // if (imageLeft < blockLeft + lrMargin) {
+          //   console.log('clamp left');
+          //   imageLeft = blockLeft + lrMargin;
+          // }
+          // if (imageLeft + imageWidth > blockLeft + blockWidth - lrMargin) {
+          //   console.log('clamp right');
+          //   imageLeft = blockLeft + blockWidth - imageWidth - lrMargin;
+          // }
+
+          const letters = textContainer.children;
+          for (var i = 0; i < letters.length; i++) {
+            const letterRandom = letters[i].dataset.padding;
+            const dx = letters[i].getBoundingClientRect().x - event.clientX;
+            const dy = letters[i].getBoundingClientRect().y - event.clientY;
+            const random = 50 * Math.random()
+            const dc = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+            if (dc < 250 && dc < 190 && dx < 0) {
+              letters[i].style.color = 'red';
+              letters[i].style.paddingLeft = `${Math.abs(dx * 2 - letterRandom)}px`;
+            } else if (dc < 250 && dy > 100 && dx < -50 && dx > -100) {
+              // letters[i].style.color = 'red';
+              letters[i].style.paddingLeft = `${Math.abs(dx * 3 + letterRandom)}px`;
+            } else {
+              // letters[i].style.color = 'black';
+              letters[i].style.paddingLeft = '0px';
+            }
+          }
+        };
+
+        window.addEventListener("load", setUp);
+        window.addEventListener("resize", setUp);
+        const throttledWrapTextAroundimage = throttled(50, wrapTextAroundimage);
+        document.addEventListener("mousemove", throttledWrapTextAroundimage);
+        document.addEventListener("touchmove", throttledWrapTextAroundimage);
+      };
+
+      const wrapper = document.getElementById("splash");
+      const block = document.getElementById("block");
+      const imageObj = document.getElementById("image");
+      block.innerHTML =
+        block.innerHTML +
+        letterWrapper(block.getAttribute("data-text"), "span", "letter");
+      wrapAroundImage(block, imageObj, 75);
+    </script>
+  </body>
+</html>
