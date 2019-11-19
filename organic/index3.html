@@ -117,24 +117,23 @@
 
         const wrapTextAroundimage = function() {
           image.classList.add("moved");
+          let pointX = event.clientX;
+          let pointY = event.clientY;
 
-          imageLeft = event.clientX - imageWidth / 2;
-          imageTop = event.clientY - imageHeight / 2;
-
-          // if (imageLeft < blockLeft + lrMargin) {
-          //   console.log('clamp left');
-          //   imageLeft = blockLeft + lrMargin;
-          // }
-          // if (imageLeft + imageWidth > blockLeft + blockWidth - lrMargin) {
-          //   console.log('clamp right');
-          //   imageLeft = blockLeft + blockWidth - imageWidth - lrMargin;
-          // }
+          if (pointX - 100 < blockLeft + lrMargin) {
+            console.log('clamp left');
+            pointX = blockLeft + lrMargin + 100;
+          }
+          if (pointX + 250 > blockLeft + blockWidth - lrMargin) {
+            console.log('clamp right');
+            pointX = blockLeft + blockWidth - 250 - lrMargin;
+          }
 
           const letters = textContainer.children;
           for (var i = 0; i < letters.length; i++) {
             const letterRandom = letters[i].dataset.padding;
-            const dx = letters[i].getBoundingClientRect().x - event.clientX;
-            const dy = letters[i].getBoundingClientRect().y - event.clientY;
+            const dx = letters[i].getBoundingClientRect().x - pointX;
+            const dy = letters[i].getBoundingClientRect().y - pointY;
             const random = 50 * Math.random()
             const dc = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
             if (dc < 150 && dc > 110 && dx < 0) {
@@ -163,7 +162,7 @@
       block.innerHTML =
         block.innerHTML +
         letterWrapper(block.getAttribute("data-text"), "span", "letter");
-      wrapAroundImage(block, imageObj, 75);
+      wrapAroundImage(block, imageObj, 100);
     </script>
   </body>
 </html>
