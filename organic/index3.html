@@ -15,12 +15,6 @@
         id="block"
         data-text="Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019 Article Title November 17 2019"
       ></div>
-      <img
-        style="width: 300px;"
-        id="image"
-        src="assets/0222-250px.jpg"
-        alt="Breads arranged on table"
-      />
     </section>
 
     <script type="text/javascript">
@@ -78,7 +72,7 @@
       /* wrapAroundImage
       textContainer -> the parent container of the text to wrap around the image. Text itself must have each character wrapped in a span. To do this automatically see letterWrapper()
       margin -> left and right stops for image movement */
-      const wrapAroundImage = function(textContainer, image, lrMargin) {
+      const wrapAroundImage = function(textContainer, lrMargin) {
         // declaring these guys, we'll define them later
         let imageRect;
         let imageWidth;
@@ -98,9 +92,6 @@
           console.log(blockRect);
           blockWidth = blockRect.width;
           blockLeft = blockRect.x;
-          imageRect = image.getBoundingClientRect();
-          imageWidth = imageRect.width;
-          imageHeight = imageRect.height;
           fontWidth = parseFloat(
             window
               .getComputedStyle(textContainer.children[0])
@@ -116,7 +107,6 @@
         };
 
         const wrapTextAroundimage = function() {
-          image.classList.add("moved");
           let pointX = event.clientX;
           let pointY = event.clientY;
 
@@ -158,11 +148,10 @@
 
       const wrapper = document.getElementById("splash");
       const block = document.getElementById("block");
-      const imageObj = document.getElementById("image");
       block.innerHTML =
         block.innerHTML +
         letterWrapper(block.getAttribute("data-text"), "span", "letter");
-      wrapAroundImage(block, imageObj, 100);
+      wrapAroundImage(block, 100);
     </script>
   </body>
 </html>
